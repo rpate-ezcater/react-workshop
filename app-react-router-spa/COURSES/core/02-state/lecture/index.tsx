@@ -4,6 +4,8 @@ import { LessonBody, LessonCard } from '~/Lesson'
 import { Counter } from './Counter'
 
 function App() {
+  const [count, setCount] = useState(0) 
+
   const vacations = [
     { id: 1, name: 'Maui', hotels: 5 },
     { id: 2, name: 'Fiji', hotels: 2 },
@@ -18,21 +20,32 @@ function App() {
     <LessonBody>
       <div className="flex gap-12">
         <LessonCard className="w-64">
-          <Counter />
-          <input type="range" min="0" max="5" step="1" className="w-full" />
+          <Counter count={count} setCount={setCount} />
+          <input type="range" 
+                 min="0" 
+                 max="5" 
+                 step="1" 
+                 className="w-full" 
+                 value={count} 
+                 onChange={ (e) => { 
+                  console.log(e.target.value) 
+                  setCount(parseInt(e.target.value))
+                  } }
+                  />
         </LessonCard>
         <LessonCard className="flex-1">
           <div className="space-y-3">
             <div className="font-bold text-small">Hotels: {totalHotels}</div>
 
-            {/* Map */}
-            <div>
-              <div className="flex gap-6 items-center bg-slate-100 p-4">
-                <div className="flex-1">Maui</div>
-                <div className="flex-1">Hotels: 5</div>
-              </div>
-            </div>
-            {/* End Map */}
+            {vacations
+              .filter((item) => item.hotels >= count)
+              .map((vacation) => (
+                <div key={vacation.id} className="flex gap-6 items-center bg-slate-100 p-4">
+                  <div className="flex-1">{vacation.name}</div>
+                  <div className="flex-1">Hotels: {vacation.hotels}</div>
+                </div>
+            ))}
+
           </div>
         </LessonCard>
       </div>
